@@ -5,9 +5,10 @@ import SendIcon from "./SendIcon";
 
 type Props = {
   onSend: (content: string) => void;
+  isLoading: boolean;
 };
 
-const Controls: FC<Props> = ({ onSend }) => {
+const Controls: FC<Props> = ({ onSend, isLoading }) => {
   const [content, setContent] = useState("");
 
   const handleContentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -40,7 +41,11 @@ const Controls: FC<Props> = ({ onSend }) => {
           onKeyDown={handleEnterPress}
         />
       </div>
-      <button className={styles.Button} onClick={handleContentSend}>
+      <button
+        className={styles.Button}
+        onClick={handleContentSend}
+        disabled={isLoading}
+      >
         <SendIcon />
       </button>
     </div>

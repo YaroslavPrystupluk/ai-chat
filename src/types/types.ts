@@ -1,4 +1,4 @@
 export type messageType = {
-  content: string;
-  role: "user";
+  content: string | undefined;
+  role: "user" | "assistant" | "system";
 };
