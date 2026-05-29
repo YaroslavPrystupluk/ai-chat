@@ -1,7 +1,7 @@
 import {useCallback, useEffect, useRef, useState} from "react";
 import type {messageType} from "../types/types.ts";
 import {ai} from "../config/gemini.ts";
-import type {Chat} from "@google/genai";
+import {type Chat, ThinkingLevel} from "@google/genai";
 
 
 export const useGemini = () => {
@@ -12,14 +12,14 @@ export const useGemini = () => {
 
     useEffect(() => {
         chatRef.current = ai.chats.create({
-            model: "gemini-2.5-flash",
+            model: "gemini-3.5-flash",
             history: [],
-            // config: {
-            //     temperature: 0.1,
-            //     thinkingConfig: {
-            //         thinkingLevel: ThinkingLevel.LOW,
-            //     },
-            // },
+            config: {
+                temperature: 0.1,
+                thinkingConfig: {
+                    thinkingLevel: ThinkingLevel.LOW,
+                },
+            },
         });
     }, []);
 
