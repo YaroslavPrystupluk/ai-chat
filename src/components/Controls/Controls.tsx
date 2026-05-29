@@ -1,7 +1,8 @@
-import { useState, type ChangeEvent, type FC } from "react";
+import {type ChangeEvent, type FC, useState} from "react";
 
 import styles from "./index.module.css";
 import SendIcon from "./SendIcon";
+
 
 type Props = {
   onSend: (content: string) => void;
