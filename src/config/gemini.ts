@@ -2,5 +2,3 @@ import { GoogleGenAI } from "@google/genai";
 
 export const ai = new GoogleGenAI({
   apiKey: import.meta.env.VITE_REACT_APP_GEMINI_API_KEY,});
-
-

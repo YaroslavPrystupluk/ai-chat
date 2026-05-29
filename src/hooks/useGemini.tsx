@@ -1,13 +1,27 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 import type {messageType} from "../types/types.ts";
-import { ai } from "../config/gemini.ts";
-import {ThinkingLevel} from "@google/genai";
+import {ai} from "../config/gemini.ts";
+import type {Chat} from "@google/genai";
 
 
 export const useGemini = () => {
     const [messages, setMessages] = useState<messageType[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const chatRef = useRef<Chat | null>(null);  // ← зберігаємо між рендерами
+
+    useEffect(() => {
+        chatRef.current = ai.chats.create({
+            model: "gemini-2.5-flash",
+            history: [],
+            // config: {
+            //     temperature: 0.1,
+            //     thinkingConfig: {
+            //         thinkingLevel: ThinkingLevel.LOW,
+            //     },
+            // },
+        });
+    }, []);
 
     const addMessage = (message: messageType) => {
         setMessages((prevMessage) => [...prevMessage, message]);
@@ -20,26 +34,16 @@ export const useGemini = () => {
     };
 
     const sendMessage = useCallback(async (content: string) => {
+        if (!chatRef.current) return;
         setIsLoading(true);
         setError(null);
         try {
-            const chat = ai.chats.create({
-                model: "gemini-2.5-flash",
-                history: [],
-                // config: {
-                //     temperature: 0.1,
-                //     thinkingConfig: {
-                //         thinkingLevel: ThinkingLevel.LOW,
-                //     },
-                // },
-            });
-
             addMessage({content, role: "user"});
             addMessage({content: '', role: 'assistant'});
 
             let fullAssistantResponse = '';
 
-            const stream = await chat.sendMessageStream({
+            const stream = await chatRef.current.sendMessageStream({
                 message: content,
             });
 
